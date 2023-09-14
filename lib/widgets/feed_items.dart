@@ -168,7 +168,7 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                 child: TextButton(
                   onPressed: isInCart
                       ? null
-                      : () {
+                      : ()async {
                         final User? user = authInstance.currentUser;
                           if (user == null) {
                             GlobalMethods.errorDialog(
@@ -176,10 +176,15 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                                 context: context);
                             return;
                           }
-                          cartProvider.addProductToCart(
+                         await  GlobalMethods.addToCart(
                               productId: productModel.id,
-                              quantity:
-                                  int.parse(_quantityTextController.text));
+                              quantity:  int.parse(_quantityTextController.text),
+                              context: context);
+                               await cartProvider.fetchCart();
+                          // cartProvider.addProductToCart(
+                          //     productId: productModel.id,
+                          //     quantity:
+                          //         int.parse(_quantityTextController.text));
                         },
                   style: ButtonStyle(
                     backgroundColor:

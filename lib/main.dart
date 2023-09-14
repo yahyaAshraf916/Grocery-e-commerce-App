@@ -14,10 +14,10 @@ import 'package:grocery_app_and_web_admin_panel/providers/wishlist_provider.dart
 import 'package:grocery_app_and_web_admin_panel/screeens/auth/forget_pass.dart';
 import 'package:grocery_app_and_web_admin_panel/screeens/auth/login.dart';
 import 'package:grocery_app_and_web_admin_panel/screeens/auth/register.dart';
-import 'package:grocery_app_and_web_admin_panel/screeens/btm_bar.dart';
 import 'package:grocery_app_and_web_admin_panel/screeens/order/order_screen.dart';
 import 'package:grocery_app_and_web_admin_panel/screeens/viewed_recentlt/viewed_recently.dart';
 import 'package:grocery_app_and_web_admin_panel/screeens/wishlist/wishlist_screen.dart';
+import 'package:grocery_app_and_web_admin_panel/widgets/fetch_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -57,6 +57,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const MaterialApp(
+            debugShowCheckedModeBanner: false,
             home: Scaffold(
               body: Center(
                 child: CircularProgressIndicator(),
@@ -66,6 +67,7 @@ class _MyAppState extends State<MyApp> {
         }
         else if(snapshot.hasError){
            return const MaterialApp(
+            debugShowCheckedModeBanner: false,
             home: Scaffold(
               body: Center(
                 child:Text("An error occured"),
@@ -98,7 +100,7 @@ class _MyAppState extends State<MyApp> {
               title: "flutter",
               debugShowCheckedModeBanner: false,
               theme: Styles.themeData(themeProvider.getDarkTheme, context),
-              home: const BottomBarScreen(),
+              home: const FetchScreen(),
               routes: {
                 OnSaleScreen.routeName: (ctx) => const OnSaleScreen(),
                 FeedsScreen.routeName: (ctx) => const FeedsScreen(),
