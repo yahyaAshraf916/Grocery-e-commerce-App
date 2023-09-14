@@ -3,6 +3,7 @@ import 'package:grocery_app_and_web_admin_panel/models/products_model.dart';
 import 'package:grocery_app_and_web_admin_panel/providers/products_provider.dart';
 import 'package:grocery_app_and_web_admin_panel/services/utils.dart';
 import 'package:grocery_app_and_web_admin_panel/widgets/back_widget.dart';
+import 'package:grocery_app_and_web_admin_panel/widgets/empt_product_widget.dart';
 import 'package:grocery_app_and_web_admin_panel/widgets/feed_items.dart';
 import 'package:grocery_app_and_web_admin_panel/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ class FeedsScreen extends StatefulWidget {
 class _FeedsScreenState extends State<FeedsScreen> {
   final TextEditingController _searchTextController = TextEditingController();
   final FocusNode _searchTextFocusNode = FocusNode();
+  List<ProductModel> listProductSearch = [];
 
   @override
   void dispose() {
@@ -27,9 +29,17 @@ class _FeedsScreenState extends State<FeedsScreen> {
   }
 
   @override
+  void initState() {
+    final productsProvider =
+        Provider.of<ProductsProvider>(context, listen: false);
+    productsProvider.fetchProducts();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final productsProviders=Provider.of<ProductsProvider>(context) ;
-    List<ProductModel>allProducts=productsProviders.getProduct;
+    final productsProviders = Provider.of<ProductsProvider>(context);
+    List<ProductModel> allProducts = productsProviders.getProduct;
     final Utils utils = Utils(context);
     Size size = utils.getScreenSize;
     final color = Utils(context).color;
@@ -57,7 +67,9 @@ class _FeedsScreenState extends State<FeedsScreen> {
                   focusNode: _searchTextFocusNode,
                   controller: _searchTextController,
                   onChanged: (value) {
-                    setState(() {});
+                    setState(() {
+                      listProductSearch = productsProviders.searchQuery(value);
+                    });
                   },
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
@@ -87,21 +99,27 @@ class _FeedsScreenState extends State<FeedsScreen> {
                 ),
               ),
             ),
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.zero,
-              crossAxisCount: 2,
-              childAspectRatio: size.width / (size.height * 0.59),
-              children: List.generate(allProducts.length, (index) {
-                return ChangeNotifierProvider.value(
-                  value: allProducts[index],
-                  child: FeedsWidget(
-                   
+            _searchTextController.text.isNotEmpty && listProductSearch.isEmpty
+                ? const EmptyProductWidget(
+                    text: "No produts found, please try another keyword")
+                : GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    crossAxisCount: 2,
+                    childAspectRatio: size.width / (size.height * 0.59),
+                    children: List.generate(
+                        _searchTextController.text.isNotEmpty
+                            ? listProductSearch.length
+                            : allProducts.length, (index) {
+                      return ChangeNotifierProvider.value(
+                        value: _searchTextController.text.isNotEmpty
+                            ? listProductSearch[index]
+                            : allProducts[index],
+                        child: FeedsWidget(),
+                      );
+                    }),
                   ),
-                );
-              }),
-            ),
           ],
         ),
       ),

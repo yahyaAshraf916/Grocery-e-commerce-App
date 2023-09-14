@@ -19,7 +19,7 @@ class CatScreen extends StatefulWidget {
 class _CatScreenState extends State<CatScreen> {
   final TextEditingController _searchTextController = TextEditingController();
   final FocusNode _searchTextFocusNode = FocusNode();
-
+  List<ProductModel> listProductSearch = [];
   @override
   void dispose() {
     _searchTextController.dispose();
@@ -30,10 +30,8 @@ class _CatScreenState extends State<CatScreen> {
   @override
   Widget build(BuildContext context) {
     final productsProviders = Provider.of<ProductsProvider>(context);
-    final productCategoryName =
-        ModalRoute.of(context)!.settings.arguments as String;
-    List<ProductModel> productByCat =
-        productsProviders.findByCategory(productCategoryName);
+    final catName = ModalRoute.of(context)!.settings.arguments as String;
+    List<ProductModel> productByCat = productsProviders.findByCategory(catName);
     final Utils utils = Utils(context);
     Size size = utils.getScreenSize;
     final color = Utils(context).color;
@@ -44,7 +42,7 @@ class _CatScreenState extends State<CatScreen> {
         centerTitle: true,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: TextWidget(
-          text: "All Products",
+          text: catName,
           color: color,
           textSize: 20,
           isTitle: true,
@@ -65,7 +63,10 @@ class _CatScreenState extends State<CatScreen> {
                         focusNode: _searchTextFocusNode,
                         controller: _searchTextController,
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            listProductSearch =
+                                productsProviders.searchQuery(value);
+                          });
                         },
                         decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
@@ -96,19 +97,28 @@ class _CatScreenState extends State<CatScreen> {
                       ),
                     ),
                   ),
-                  GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.zero,
-                    crossAxisCount: 2,
-                    childAspectRatio: size.width / (size.height * 0.59),
-                    children: List.generate(productByCat.length, (index) {
-                      return ChangeNotifierProvider.value(
-                        value: productByCat[index],
-                        child: FeedsWidget(),
-                      );
-                    }),
-                  ),
+                  _searchTextController.text.isNotEmpty &&
+                          listProductSearch.isEmpty
+                      ? const EmptyProductWidget(
+                          text: "No produts found, please try another keyword")
+                      : GridView.count(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          crossAxisCount: 2,
+                          childAspectRatio: size.width / (size.height * 0.59),
+                          children: List.generate(
+                              _searchTextController.text.isNotEmpty
+                                  ? listProductSearch.length
+                                  : productByCat.length, (index) {
+                            return ChangeNotifierProvider.value(
+                              value: _searchTextController.text.isNotEmpty
+                                  ? listProductSearch[index]
+                                  : productByCat[index],
+                              child: FeedsWidget(),
+                            );
+                          }),
+                        ),
                 ],
               ),
             ),

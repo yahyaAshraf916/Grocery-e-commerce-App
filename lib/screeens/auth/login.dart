@@ -10,6 +10,7 @@ import 'package:grocery_app_and_web_admin_panel/screeens/btm_bar.dart';
 import 'package:grocery_app_and_web_admin_panel/screeens/loading_manager.dart';
 import 'package:grocery_app_and_web_admin_panel/services/global_methods.dart';
 import 'package:grocery_app_and_web_admin_panel/widgets/auth_button.dart';
+import 'package:grocery_app_and_web_admin_panel/widgets/fetch_screen.dart';
 import 'package:grocery_app_and_web_admin_panel/widgets/google_button.dart';
 import 'package:grocery_app_and_web_admin_panel/widgets/text_widget.dart';
 
@@ -52,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const BottomBarScreen(),
+            builder: (context) => const FetchScreen(),
           ),
         );
         print("Login Succefully ");
@@ -280,7 +281,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       fct: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => const BottomBarScreen(),
+                            builder: (context) => const FetchScreen(),
                           ),
                         );
                       },

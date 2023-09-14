@@ -9,9 +9,7 @@ import 'package:grocery_app_and_web_admin_panel/providers/wishlist_provider.dart
 import 'package:grocery_app_and_web_admin_panel/widgets/heart_btn.dart';
 import 'package:grocery_app_and_web_admin_panel/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
-
 import '../../providers/cart_provider.dart';
-
 import '../../services/utils.dart';
 
 class CartWidget extends StatefulWidget {
@@ -166,8 +164,13 @@ class _CartWidgetState extends State<CartWidget> {
                       child: Column(
                         children: [
                           InkWell(
-                            onTap: () {
-                              cartProvider.removeOneItem(cartModel.productId);
+                            onTap: () async {
+                              cartProvider.removeOneItemLocal(productId: cartModel.productId);
+                              await cartProvider.removeOneItemOnline(
+                                productId: cartModel.productId,
+                                cartId: cartModel.id,
+                                quantity: cartModel.quantity,
+                              );
                             },
                             child: const Icon(
                               CupertinoIcons.cart_badge_minus,
@@ -178,7 +181,10 @@ class _CartWidgetState extends State<CartWidget> {
                           const SizedBox(
                             height: 5,
                           ),
-                          HeartBTN(productId: getCurrProduct.id,isInWishlist: isInWishlist,),
+                          HeartBTN(
+                            productId: getCurrProduct.id,
+                            isInWishlist: isInWishlist,
+                          ),
                           TextWidget(
                             text:
                                 '\$${(usedPrice * int.parse(_quantityTextController.text)).toStringAsFixed(2)}',

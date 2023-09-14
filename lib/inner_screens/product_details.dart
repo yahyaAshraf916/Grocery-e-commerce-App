@@ -59,8 +59,10 @@ class _ProductDetailsState extends State<ProductDetails> {
         appBar: AppBar(
             leading: InkWell(
               borderRadius: BorderRadius.circular(12),
-              onTap: () =>
-                  Navigator.canPop(context) ? Navigator.pop(context) : null,
+              onTap: () {
+                viewedProProvider.addProductToHistory(productId: productId);
+                Navigator.canPop(context) ? Navigator.pop(context) : null;
+              },
               child: Icon(
                 IconlyLight.arrowLeft2,
                 color: color,
@@ -290,8 +292,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                             child: InkWell(
                               onTap: isInCart
                                   ? null
-                                  : () {
-                                    final User? user =
+                                  : () async {
+                                      final User? user =
                                           authInstance.currentUser;
                                       if (user == null) {
                                         GlobalMethods.errorDialog(
@@ -300,10 +302,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                                             context: context);
                                         return;
                                       }
-                                      cartProvider.addProductToCart(
+                                      await GlobalMethods.addToCart(
                                           productId: productId,
                                           quantity: int.parse(
-                                              _quantityTextController.text));
+                                              _quantityTextController.text),
+                                          context: context);
+                                      await cartProvider.fetchCart();
+                                      // cartProvider.addProductToCart(
+                                      //     productId: productId,
+                                      //     quantity: int.parse(
+                                      //         _quantityTextController.text));
                                     },
                               borderRadius: BorderRadius.circular(10),
                               child: Padding(
