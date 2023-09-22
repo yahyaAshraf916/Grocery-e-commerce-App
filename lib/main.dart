@@ -6,8 +6,9 @@ import 'package:grocery_app_and_web_admin_panel/inner_screens/cat_screen.dart';
 import 'package:grocery_app_and_web_admin_panel/inner_screens/feeds_screen.dart';
 import 'package:grocery_app_and_web_admin_panel/inner_screens/on_sale_screen.dart';
 import 'package:grocery_app_and_web_admin_panel/inner_screens/product_details.dart';
-import 'package:grocery_app_and_web_admin_panel/provider/dark_theme_provider.dart';
+import 'package:grocery_app_and_web_admin_panel/providers/dark_theme_provider.dart';
 import 'package:grocery_app_and_web_admin_panel/providers/cart_provider.dart';
+import 'package:grocery_app_and_web_admin_panel/providers/orders_provider.dart';
 import 'package:grocery_app_and_web_admin_panel/providers/products_provider.dart';
 import 'package:grocery_app_and_web_admin_panel/providers/viewed_provider.dart';
 import 'package:grocery_app_and_web_admin_panel/providers/wishlist_provider.dart';
@@ -64,18 +65,17 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
           );
-        }
-        else if(snapshot.hasError){
-           return const MaterialApp(
+        } else if (snapshot.hasError) {
+          return const MaterialApp(
             debugShowCheckedModeBanner: false,
             home: Scaffold(
               body: Center(
-                child:Text("An error occured"),
+                child: Text("An error occured"),
               ),
             ),
           );
         }
-       
+
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (_) {
@@ -92,6 +92,9 @@ class _MyAppState extends State<MyApp> {
             }),
             ChangeNotifierProvider(create: (_) {
               return ViewedProdProvider();
+            }),
+            ChangeNotifierProvider(create: (_) {
+              return OrdersProvider();
             }),
           ],
           child: Consumer<DarkThemeProvider>(

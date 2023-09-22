@@ -165,8 +165,7 @@ class _CartWidgetState extends State<CartWidget> {
                         children: [
                           InkWell(
                             onTap: () async {
-                              cartProvider.removeOneItemLocal(productId: cartModel.productId);
-                              await cartProvider.removeOneItemOnline(
+                              await cartProvider.removeOneItem(
                                 productId: cartModel.productId,
                                 cartId: cartModel.id,
                                 quantity: cartModel.quantity,

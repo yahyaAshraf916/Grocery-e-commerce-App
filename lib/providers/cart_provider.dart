@@ -21,7 +21,7 @@ class CartProvider with ChangeNotifier {
   //   );
   //   notifyListeners();
   // }
- 
+
   final userCollection = FirebaseFirestore.instance.collection("users");
   Future<void> fetchCart() async {
     final User? user = authInstance.currentUser;
@@ -62,18 +62,15 @@ class CartProvider with ChangeNotifier {
     );
     notifyListeners();
   }
- void removeOneItemLocal({required String productId}) {
-      _cartItems.remove(productId);
-    notifyListeners();
-  }
-  Future<void> removeOneItemOnline({
+
+  Future<void> removeOneItem({
     required String productId,
     required String cartId,
     required int quantity,
   }) async {
-     final User? user = authInstance.currentUser;
+    _cartItems.remove(productId);
+    final User? user = authInstance.currentUser;
     await userCollection.doc(user!.uid).update({
-      
       "userCart": FieldValue.arrayRemove([
         {
           "productId": productId,
@@ -87,10 +84,8 @@ class CartProvider with ChangeNotifier {
   }
 
   Future<void> clearOnlineCart() async {
-     final User? user = authInstance.currentUser;
-    userCollection.doc(user!.uid).update({
-      "userCart":[]
-    });
+    final User? user = authInstance.currentUser;
+    userCollection.doc(user!.uid).update({"userCart": []});
     notifyListeners();
   }
 

@@ -9,9 +9,9 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
-    await FirebaseFirestore.instance.collection("products").get().then((value) {
+    await FirebaseFirestore.instance.collection("products").get().then((QuerySnapshot productSnapshot) {
       productsList = [];
-      for (var element in value.docs) {
+      for (var element in productSnapshot.docs) {
         productsList.insert(
             0,
             ProductModel(
