@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_app_and_web_admin_panel/provider/dark_theme_provider.dart';
+import 'package:grocery_app_and_web_admin_panel/providers/dark_theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class Utils {
