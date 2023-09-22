@@ -36,8 +36,9 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     final productId = ModalRoute.of(context)!.settings.arguments as String;
-    final productProvider = Provider.of<ProductsProvider>(context);
+    
     final cartProvider = Provider.of<CartProvider>(context);
+    final productProvider = Provider.of<ProductsProvider>(context); 
     final getCurrProduct = productProvider.findProdById(productId);
     double usedPrice = getCurrProduct.isOnSale
         ? getCurrProduct.salePrice

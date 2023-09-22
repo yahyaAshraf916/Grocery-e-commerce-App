@@ -129,4 +129,28 @@ class GlobalMethods {
       errorDialog(subtitle: error.toString(), context: context);
     }
   }
+
+  static Future<void> addToWishlist(
+      {required String productId, required BuildContext context}) async {
+    final User? user = authInstance.currentUser;
+    final uId = user!.uid;
+    final wishlistId = const Uuid().v4();
+    try {
+      FirebaseFirestore.instance.collection("users").doc(uId).update({
+        "userWish": FieldValue.arrayUnion([
+          {
+            "wishlistId": wishlistId,
+            "productId": productId,
+          }
+        ])
+      });
+      await Fluttertoast.showToast(
+        msg: "Item has been added to your wishlist",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
+    } on FirebaseAuthException catch (error) {
+      errorDialog(subtitle: error.toString(), context: context);
+    }
+  }
 }

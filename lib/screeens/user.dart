@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:grocery_app_and_web_admin_panel/consts/firebase_consts.dart';
-import 'package:grocery_app_and_web_admin_panel/provider/dark_theme_provider.dart';
+import 'package:grocery_app_and_web_admin_panel/providers/dark_theme_provider.dart';
 import 'package:grocery_app_and_web_admin_panel/screeens/auth/forget_pass.dart';
 import 'package:grocery_app_and_web_admin_panel/screeens/auth/login.dart';
 import 'package:grocery_app_and_web_admin_panel/screeens/loading_manager.dart';

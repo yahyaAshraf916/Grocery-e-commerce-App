@@ -4,7 +4,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:grocery_app_and_web_admin_panel/consts/consts.dart';
 import 'package:grocery_app_and_web_admin_panel/consts/firebase_consts.dart';
 import 'package:grocery_app_and_web_admin_panel/providers/cart_provider.dart';
+import 'package:grocery_app_and_web_admin_panel/providers/orders_provider.dart';
 import 'package:grocery_app_and_web_admin_panel/providers/products_provider.dart';
+import 'package:grocery_app_and_web_admin_panel/providers/wishlist_provider.dart';
 import 'package:grocery_app_and_web_admin_panel/screeens/btm_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -24,13 +26,19 @@ class _FetchScreenState extends State<FetchScreen> {
       final productsProvider =
           Provider.of<ProductsProvider>(context, listen: false);
       final cartProvider = Provider.of<CartProvider>(context, listen: false);
+      final wislistProvider =
+          Provider.of<WishlistProvider>(context, listen: false);
+   //   final ordersProvider =
+          Provider.of<OrdersProvider>(context, listen: false);
       final User? user = authInstance.currentUser;
+      await productsProvider.fetchProducts();
       if (user == null) {
-        await productsProvider.fetchProducts();
-         await cartProvider.fetchCart();
+        cartProvider.clearLocalCart();
+        wislistProvider.clearLocalWishlist();
       } else {
-        await productsProvider.fetchProducts();
         await cartProvider.fetchCart();
+        await wislistProvider.fetchWishlist();
+       // await ordersProvider.fetchOrders();
       }
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (ctx) => const BottomBarScreen()));

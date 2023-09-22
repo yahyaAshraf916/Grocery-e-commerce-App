@@ -12,6 +12,7 @@ import 'package:grocery_app_and_web_admin_panel/screeens/btm_bar.dart';
 import 'package:grocery_app_and_web_admin_panel/screeens/loading_manager.dart';
 import 'package:grocery_app_and_web_admin_panel/services/global_methods.dart';
 import 'package:grocery_app_and_web_admin_panel/widgets/auth_button.dart';
+import 'package:grocery_app_and_web_admin_panel/widgets/fetch_screen.dart';
 import 'package:grocery_app_and_web_admin_panel/widgets/text_widget.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -61,18 +62,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
         final User? user = authInstance.currentUser;
         final _uId = user!.uid;
-       await FirebaseFirestore.instance.collection("users").doc(_uId).set({
+        user.updateDisplayName(_nameTextController.text);
+        user.reload();
+        await FirebaseFirestore.instance.collection("users").doc(_uId).set({
           "id": _uId,
           "name": _nameTextController.text,
           "email": _emailTextController.text.toLowerCase(),
           "shipping-address": _addressTextController.text,
-          "userWish":[],
-          "userCart":[],
-          "createdAt":Timestamp.now(),
+          "userWish": [],
+          "userCart": [],
+          "createdAt": Timestamp.now(),
         });
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const FeedsScreen(),
+            builder: (context) => const FetchScreen(),
           ),
         );
         print("Succefully registered");

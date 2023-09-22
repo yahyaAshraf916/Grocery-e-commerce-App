@@ -1,7 +1,10 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_app_and_web_admin_panel/inner_screens/product_details.dart';
+import 'package:grocery_app_and_web_admin_panel/models/order_model.dart';
+import 'package:grocery_app_and_web_admin_panel/providers/products_provider.dart';
 import 'package:grocery_app_and_web_admin_panel/services/global_methods.dart';
+import 'package:provider/provider.dart';
 import '../../services/utils.dart';
 import '../../widgets/text_widget.dart';
 
@@ -14,27 +17,38 @@ class OrderWidget extends StatefulWidget {
 
 class _OrderWidgetState extends State<OrderWidget> {
   late String orderDateToShow;
-
   @override
+  void didChangeDependencies() {
+    final ordersModel = Provider.of<OrderModel>(context);
+    var orderDate = ordersModel.orderDate.toDate();
+    orderDateToShow = "${orderDate.day}/${orderDate.month}/${orderDate.year}";
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
     Size size = Utils(context).getScreenSize;
-
+    final ordersModel = Provider.of<OrderModel>(context);
+    final productProvider = Provider.of<ProductsProvider>(context);
+    final getCurrProduct = productProvider.findProdById(ordersModel.productId);
     return ListTile(
-      subtitle: const Text('Paid: \$12.8'),
+      subtitle: Text('Paid: \$${double.parse(ordersModel.price).toString()}'),
       onTap: () {
         GlobalMethods.navigateTo(
             ctx: context, routeName: ProductDetails.routeName);
       },
       leading: FancyShimmerImage(
         width: size.width * 0.2,
-        imageUrl:
-            "https://www.pngkit.com/png/detail/63-636758_apricot-png-image-apricot-png.png",
+        imageUrl: getCurrProduct.imageUrl,
         boxFit: BoxFit.fill,
       ),
-      title: TextWidget(text: 'Title x12 ', color: color, textSize: 18),
-      trailing: TextWidget(text: "12/05/2023", color: color, textSize: 18),
+      title: TextWidget(
+          text: '${getCurrProduct.title}x${ordersModel.quantity} ',
+          color: color,
+          textSize: 18),
+      trailing: TextWidget(
+          text: orderDateToShow, color: color, textSize: 18),
     );
   }
 }
