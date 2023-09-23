@@ -93,13 +93,22 @@ class _ViewedRecentlyWidgetState extends State<ViewedRecentlyWidget> {
                        //   await  cartProvider.removeOneItem(getCurrProduct.id);
                           }
                         : ()async {
-                         await  GlobalMethods.addToCart(
+                           final User? user = authInstance.currentUser;
+                          if(user==null){
+                              GlobalMethods.errorDialog(
+                                  subtitle: "No user found, Please login first",
+                                  context: context);
+                              return;
+                          }else{
+                              await  GlobalMethods.addToCart(
                                 productId:  getCurrProduct.id,
                                 quantity: 1,
                                 context: context);
                                  await cartProvider.fetchCart();
                             // cartProvider.addProductToCart(
                             //     productId: getCurrProduct.id, quantity: 1);
+                          }
+                       
                           },
                     child: Padding(
                       padding:const EdgeInsets.all(8.0),
